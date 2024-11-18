@@ -2,7 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
-require("dotenv").config(); 
+require("dotenv").config();
 
 const authRouter = require("./routes/auth/auth-routes");
 const adminProductsRouter = require("./routes/admin/products-routes");
@@ -21,15 +21,18 @@ const PORT = process.env.PORT || 5000;
 const DATABASE_URL = process.env.DATABASE_URL;
 
 mongoose
-  .connect(DATABASE_URL)
+  .connect(DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log("MongoDB connected"))
-  .catch((error) => console.log(error));
+  .catch((error) => {
+    console.error("MongoDB connection error:", error);
+    process.exit(1); // Thoát nếu không kết nối được
+  });
 
 const app = express();
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: process.env.FRONTEND_URL || "http://localhost:5173",
     methods: ["GET", "POST", "DELETE", "PUT"],
     allowedHeaders: [
       "Content-Type",
@@ -44,6 +47,7 @@ app.use(
 
 app.use(cookieParser());
 app.use(express.json());
+
 app.use("/api/auth", authRouter);
 app.use("/api/admin/products", adminProductsRouter);
 app.use("/api/admin/orders", adminOrderRouter);
@@ -57,7 +61,9 @@ app.use("/api/shop/review", shopReviewRouter);
 
 app.use("/api/common/feature", commonFeatureRouter);
 
-app.listen(PORT, () => console.log(`Server is now running on port ${PORT}`));
+if (process.env.NODE_ENV !== "test") {
+  app.listen(PORT, () => console.log(`Server is now running on port ${PORT}`));
+}
 
 app.get("/", (req, res) => {
   res.send("Welcome to the E-commerce API!");
