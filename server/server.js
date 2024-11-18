@@ -62,7 +62,7 @@ app.use("/api/shop/review", shopReviewRouter);
 app.use("/api/common/feature", commonFeatureRouter);
 
 app.get("/", (req, res) => {
-  res.send("Welcome to the E-commerce API!");
+  res.send("Server is Running!");
 });
 
 if (!module.parent) {
@@ -70,3 +70,9 @@ if (!module.parent) {
 }
 
 module.exports = app; 
+
+app.use(cors({
+  origin: [""],
+  methods: ["POST", "GET"],
+  credentials: true
+}));
