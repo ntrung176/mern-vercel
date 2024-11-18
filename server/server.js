@@ -25,7 +25,7 @@ mongoose
   .then(() => console.log("MongoDB connected"))
   .catch((error) => {
     console.error("MongoDB connection error:", error);
-    process.exit(1); // Thoát nếu không kết nối được
+    process.exit(1);
   });
 
 const app = express();
@@ -61,10 +61,12 @@ app.use("/api/shop/review", shopReviewRouter);
 
 app.use("/api/common/feature", commonFeatureRouter);
 
-if (process.env.NODE_ENV !== "test") {
-  app.listen(PORT, () => console.log(`Server is now running on port ${PORT}`));
-}
-
 app.get("/", (req, res) => {
   res.send("Welcome to the E-commerce API!");
 });
+
+if (!module.parent) {
+  app.listen(PORT, () => console.log(`Server is now running on port ${PORT}`));
+}
+
+module.exports = app; 
