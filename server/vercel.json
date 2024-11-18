@@ -6,9 +6,13 @@
     }
   ],
   "routes": [
+<<<<<<< HEAD
     {
       "src": "/api/(.*)",
       "dest": "/server/server.js"
     }
+=======
+    { "src": "/api/(.*)", "dest": "/server/server.js" }
+>>>>>>> 94da981c532f1c1c29761800b756f024cd375249
   ]
 }
